@@ -17,5 +17,8 @@ typedef struct	s_list
 }		t_list;
 
 char	*get_next_line(int fd);
-void	ft_read_and_stash(int fd, t_list *stash, int *readed);
+void	read_and_stash(int fd, t_list **stash);
+t_list	*ft_getback_last(t_list *stash);
+int	check_newline(t_list **stash);
+
 #endif

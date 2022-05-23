@@ -18,66 +18,105 @@
 
 char	*get_next_line(int fd)
 {
-	//static t_list	*line;
-	char		*buf;
+	static t_list	*line;
+	char		*stash;
 	int		readed;
-	
-	buf = (char *)malloc(sizeof(buf) * BUFFER_SIZE + 1);
-	//line = NULL;
-	if (!buf)
+
+	stash = NULL;
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	readed = read(fd, buf, BUFFER_SIZE);
-	
-	buf[readed] = '\0';
-	return (buf);
+	line = NULL;
+	read_and_stash(fd, &stash);
+	if (!stash)
+		return (NULL);
+	// 2. On extrait la ligne 
+	return (line->content);
 }
 
-/*
-void	read_and_stash(char **stash, int *readed)
+void	read_and_stash(int fd, t_list **stash)
 {
 	char	*buf;
-	int	i;
+	int	readed;
 
-	while (stash)
+	readed = 1;
+	new_line = malloc(sizeof(t_list));
+	if (!new_line)
+		return ;
+	while (!check_newline(*stash) && readed != 0)
 	{
-		buf = (char *)malloc(sizeof(buf) * BUFFER_SIZE + 1);
-		if (!buf || *readed < 0 || *readed < -1)
+		buf = malloc(sizeof(char) * BUFFER_SIZE + 1);
+		if (buf == NULL)
 			return ;
-		while (*stash->content[i])
+		readed = (int)read(fd, buf, BUFFER_SIZE);
+		if ((*stash == NULL && readed == 0) || readed == -1)
 		{
-			buf[i] = stash->content[i]
-		}		
-		*readed = (int)read(fd, buf, BUFFER_SIZE);
+			free(buf);
+			return ;
+		}
+		buf[readed] = '\0';
+		add_to_stash(stash, buf, readed);
+		free(buf);
 	}
-}*/
+}
 
-int	main(int argc, char **argv)
+void	add_to_stash(t_list **stash, char *buf, int readed)
 {
-	int	fd;
-	char	*buffer;
+	t_list	*new_line;
+	t_list	*last;
+	int		i;
 
-	buffer = (char *)malloc(sizeof(BUFFER_SIZE));	
+	i = 0;
+	new_line->next = NULL;
+	new_line->content = malloc(sizeof(char) * readed + 1);
+	if (new_line == NULL)
+		return ;
+	while (buf[i] && i < readed)
+	{
+		new_line->content[i] = buf[i];
+		i++;
+	}
+	new_line->content[i] = '\0';
+	if (*stash == NULL)
+	{
+		*stash = new_line;
+		return ;
+	}
+	ft_getback_last(*stash);
+	last->next = new_line;
+}
 
-	/* On ouvre le fichier : on recupere un fd sur le fichier */
-	/* Il ne peut pas y avoir de fd negatif, si c est le cas l ouverture a echoue : dans ce cas on sort du programme  */ 
+t_list	*ft_getback_last(t_list *stash)
+{
+	t_list	*last;
 	
-	if (argc == 0)
+	last = stash;
+	while (last && last->next)
+		last = stash->next;
+	return (last);
+}
+
+/* Je check les lignes de fichier, si le curseur rencontre un '\n', la fonction retourne 1 sinon 0 */
+
+int	check_newline(t_list **stash)
+{
+	int	i;
+	t_list	*current;
+
+	if (!stash)
 		return (0);
-	fd = open(argv[1], O_RDONLY);
-	if (!buffer || fd < 0)
-		return (0);
-;
-	/* Apres la lecture -> on passe a read : le fd, le buffer et la taille du buffer  */
-	/* Si la taille du buffer est plus grand que la taille du buffer lui meme, le programme devient sensible au overflow  */ 
-
-	buffer = get_next_line(fd);
-
-	/* On finis par le caractere 0 pour avoir une chaine finis */
-	/* Line correspond au dernier caractere de buffer + 1 */
-
-	printf("%s", buffer);
-	buffer[fd] = '\0';
-
-	free(buffer);	
+	i = 0;
+	while (current->content[i])
+	{
+		if (current->content[i] == '\n')
+			return (1);
+		i++;
+	}
 	return (0);
+}
+
+void	add_line_to_stash()
+
+int	main()
+{
+	char	**tab = 
 }
