@@ -1,75 +1,61 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   get_next_line_test.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nlorion <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 10:19:12 by nlorion           #+#    #+#             */
-/*   Updated: 2022/05/23 11:50:48 by nlorion          ###   ########.fr       */
+/*   Updated: 2022/05/23 16:45:10 by nlorion          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-/* On écrit une fonction qui va pour permettre de lire les lignes de notre fichier et de les stocker dans stack*/
+/* Tant que je ne rencontre pas de \n, je stock la ligne dans un pointeur temporaire qui est le content de t_list */
+/* Une fois tomber sur le \n, je stock la ligne dans le buffer et free mon pointeur temporaire */
+/* Je stock dans mon buffer toutes les lignes  */
+
+char	*get_next_line(int fd)
+{
+	//static t_list	*line;
+	char		*buf;
+	int		readed;
+	
+	buf = (char *)malloc(sizeof(buf) * BUFFER_SIZE + 1);
+	//line = NULL;
+	if (!buf)
+		return (NULL);
+	readed = read(fd, buf, BUFFER_SIZE);
+	
+	buf[readed] = '\0';
+	return (buf);
+}
+
 /*
-void	ft_read_files(int fd, t_list *stack, int *reads)
+void	read_and_stash(char **stash, int *readed)
 {
 	char	*buf;
-
-	buf = malloc(sizeof(t_list) * BUFFER_SIZE + 1);
-	if (!buf)
-		return ;
-	while (!ft_find_newline(stack) && *reads != 0)
-	{
-		*reads = (int)read(fd, buf, BUFFER_SIZE);
-		if (stack == NULL || *read < 0 || *reads < -1)
-		{
-			free(buf);
-			return ;
-		}
-		buf[*reads] = '\0';
-	}
-}
-*/
-/* Une fonction qui va vérifier si on est arrivé à la fin de la ligne */
-/*
-char	*ft_find_newline(int fd)
-{
 	int	i;
-	char	*buffer;
-	int	*reads;
 
-	i = 0;
-	buffer = malloc(sizeof(t_list) * BUFFER_SIZE + 1);
-	buffer = (int)read(fd, buffer, BUFFER_SIZE);
-	if (buffer == NULL || *reads < -1 || *reads < 0)
-
+	while (stash)
 	{
-		free(buffer);
-		return (NULL);
+		buf = (char *)malloc(sizeof(buf) * BUFFER_SIZE + 1);
+		if (!buf || *readed < 0 || *readed < -1)
+			return ;
+		while (*stash->content[i])
+		{
+			buf[i] = stash->content[i]
+		}		
+		*readed = (int)read(fd, buf, BUFFER_SIZE);
 	}
-	while (reads)
-	{
-		buffer[i] = reads[i];
-		i++;
-	}
-	return (buffer);
-}
-*/
-/* Une fonction qui récupére le dernier élément de la liste avec lst_getback_last */
-
-//t_list	*ft_getback_last(t_list *stack);
+}*/
 
 int	main(int argc, char **argv)
 {
 	int	fd;
-	int	line;
 	char	*buffer;
-	int	i;
 
-	i = 0;
 	buffer = (char *)malloc(sizeof(BUFFER_SIZE));	
 
 	/* On ouvre le fichier : on recupere un fd sur le fichier */
@@ -84,15 +70,14 @@ int	main(int argc, char **argv)
 	/* Apres la lecture -> on passe a read : le fd, le buffer et la taille du buffer  */
 	/* Si la taille du buffer est plus grand que la taille du buffer lui meme, le programme devient sensible au overflow  */ 
 
-	line = read(fd, buffer, BUFFER_SIZE);
+	buffer = get_next_line(fd);
 
 	/* On finis par le caractere 0 pour avoir une chaine finis */
 	/* Line correspond au dernier caractere de buffer + 1 */
 
-	buffer[line] = '\0';
+	printf("%s", buffer);
+	buffer[fd] = '\0';
 
-	write(1, buffer, line);
-	
 	free(buffer);	
 	return (0);
 }
