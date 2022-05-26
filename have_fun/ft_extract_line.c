@@ -13,6 +13,7 @@ char	*get_next_line(int fd);
 char	*ft_read_line(int fd, char *buf, char *line);
 int	ft_strlen(char *str);
 char	*ft_strjoin(char *buf, char *line);
+int	ft_strchr(char *str, int c);
 
 int	main(int argc, char **argv)
 {
@@ -27,7 +28,7 @@ int	main(int argc, char **argv)
 	while (1)
 	{
 		readed = get_next_line(fd);
-		printf("%s", readed);
+		printf("main : %s", readed);
 		if (!readed)
 			break ;
 		free(readed);	
@@ -39,13 +40,12 @@ int	main(int argc, char **argv)
 char	*get_next_line(int fd)
 {
 	static char	buf[BUFFER_SIZE + 1];
-	int	readed;
 	char	*line;
 	
-	if (fd < 0 || fd < -1 || read(fd, buf, BUFFER_SIZE) <= -1)
+	if (fd < 0 || read(fd, buf, 0) <= -1 || BUFFER_SIZE < 0)
 		return (NULL);
 	line = ft_read_line(fd, buf, line);
-	if (line == NULL)
+	if (line[0] == '\0')
 	{
 		free(line);
 		return (NULL);
@@ -61,20 +61,20 @@ char	*ft_read_line(int fd, char *buf, char *line)
 	line = ft_strjoin(buf, line);
 	while (readed != 0)
 	{
+		readed = (int)read(fd, buf, BUFFER_SIZE);
 		if (readed == 0)
 			return (NULL);
-		printf("1 : %s\n", line);
-		readed = read(fd, line, BUFFER_SIZE);
-		if (!line || !buf)
-		{
-			free(line);
-			return (NULL);
-		}
-		ft_check_line(line);
-		ft_check_last_line(buf, line);
-		printf("2 : %s\n", line);
+		buf[readed] = '\0';
 		line = ft_strjoin(buf, line);
-		line[readed] = '\0';
+		printf("%s\n", line);
+		if (ft_strchr(line, '\n') == 1)
+		{	
+			ft_check_last_line(buf, line);
+			ft_check_line(line);
+			break ;
+		}
+		if (line == NULL)
+			return (NULL);
 	}
 	return (line);
 }
@@ -87,8 +87,25 @@ char	*ft_check_line(char *line)
 	i = 0;
 	while (line[i] && line[i] != '\n')
 		i++;
+	i++;
 	line[i] = '\0';
 	return (line);
+}
+
+int	ft_strchr(char *str, int c)
+{
+	int	i;
+	unsigned char	search;
+
+	i = 0;
+	search = (unsigned char)c;
+	while (str[i] && str[i] != search)
+	{
+		i++;
+		if (str[i] == search)
+			return (1);
+	}
+	return (0);
 }
 
 char	*ft_check_last_line(char *buf, char *line)
@@ -109,9 +126,9 @@ char	*ft_check_last_line(char *buf, char *line)
 			i++;
 			j++;
 		}
-		line[i] = '\0';
+		buf[j] = '\0';
 	}
-	return (line);
+	return (buf);
 }
 
 // Ecrire un strjoin qui va me permettre de deplacer mes lignes dans mon buffer
@@ -129,10 +146,10 @@ char	*ft_strjoin(char *buf, char *line)
 	if (!newstr)
 		return (NULL);
 	i = 0;
+	while (*line != '\0')
+		*tab++ = *line++;
 	while (*buf != '\0')
 		*tab++ = *buf++;
-	while (line[i] != '\0')
-		*tab++ = *line++;
 	*tab = '\0';
 	return (newstr);
 }
