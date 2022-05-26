@@ -1,26 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nlorion <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/26 18:26:12 by nlorion           #+#    #+#             */
-/*   Updated: 2022/05/26 18:27:27 by nlorion          ###   ########.fr       */
+/*   Updated: 2022/05/26 18:37:10 by nlorion          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*get_next_line(int fd)
 {
-	static char	buf[BUFFER_SIZE + 1];
+	static char	buf[1024][BUFFER_SIZE + 1];
 	char	*line;
 	
 	line = NULL;
-	if (fd < 0 || BUFFER_SIZE <= 0 || fd == -1)	
+	if (fd < 0 || BUFFER_SIZE <= 0 || fd == -1 || fd > 1024)	
 		return (NULL);
-	line = ft_read_line(fd, line, buf);
+	line = ft_read_line(fd, line, buf[1024]);
 	if (line[0] == '\0')
 	{
 		free(line);
