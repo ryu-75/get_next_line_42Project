@@ -6,7 +6,7 @@
 /*   By: nlorion <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/26 18:26:12 by nlorion           #+#    #+#             */
-/*   Updated: 2022/05/26 18:27:27 by nlorion          ###   ########.fr       */
+/*   Updated: 2022/05/27 14:35:08 by nlorion          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ char	*ft_check_last_line(char *line, char *buf)
 	}
 	return (buf);
 }
-/*
+
 int	main(int argc, char **argv)
 {
 	int	fd;
@@ -94,9 +94,9 @@ int	main(int argc, char **argv)
 
 	if (argc == 0)
 		return (0);
-	fd = open(argv[1], O_RDONLY);
 	if (fd < 0 || fd == -1)
 		return (0);
+	fd = open(argv[1], O_RDONLY);
 	while (1)
 	{
 		readed = get_next_line(fd);
@@ -106,4 +106,4 @@ int	main(int argc, char **argv)
 	}
 	return (0);
 }
-*/
+

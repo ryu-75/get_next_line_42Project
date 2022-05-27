@@ -6,7 +6,7 @@
 /*   By: nlorion <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/26 18:26:23 by nlorion           #+#    #+#             */
-/*   Updated: 2022/05/26 18:26:25 by nlorion          ###   ########.fr       */
+/*   Updated: 2022/05/27 14:36:11 by nlorion          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,17 +30,16 @@ char	*ft_strchr(char *str, int c)
 char	*ft_strjoin(char *s1, char *s2)
 {
 	int	len;
-	int	i;
 	char	*tab;
 	char	*newstr;
+	int	i;
 
-	newstr = NULL;	
+	i = 0;
 	len = (ft_strlen(s1) + ft_strlen(s2));
 	tab = (char *)malloc(sizeof(char) * len + 1);
 	newstr = tab;
 	if (!newstr)
 		return (NULL);
-	i = 0;
 	while (s1 && s1[i])
 	{
 		tab[i] = s1[i];
@@ -48,9 +47,8 @@ char	*ft_strjoin(char *s1, char *s2)
 	}
 	while (*s2)
 	{
-		tab[i] = *s2;
+		tab[i] = *s2++;
 		i++;
-		s2++;
 	}
 	tab[len] = '\0';
 	free(s1);
