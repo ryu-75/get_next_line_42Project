@@ -6,25 +6,23 @@
 /*   By: nlorion <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/26 18:26:23 by nlorion           #+#    #+#             */
-/*   Updated: 2022/05/26 18:36:29 by nlorion          ###   ########.fr       */
+/*   Updated: 2022/05/27 15:51:58 by nlorion          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-char	*ft_strchr(char *str, int c)
+int	ft_strchr(char *str, int c)
 {
 	int	i;
-	unsigned char	search;
 
 	i = 0;
-	search = (unsigned char)c;
-	while (str[i] && str[i] != search)
+	while (str[i] && str[i] != c)
 		i++;
-	if (str[i] == search)
-		return ((char *)str + i);
+	if (str[i] == c)
+		return (1);
 	else
-		return (NULL);
+		return (0);
 }
 
 char	*ft_strjoin(char *s1, char *s2)
@@ -66,4 +64,3 @@ int	ft_strlen(char *str)
 		i++;
 	return (i);
 }
-

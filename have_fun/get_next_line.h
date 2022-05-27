@@ -6,14 +6,12 @@
 /*   By: nlorion <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/26 18:16:48 by nlorion           #+#    #+#             */
-/*   Updated: 2022/05/27 14:02:18 by nlorion          ###   ########.fr       */
+/*   Updated: 2022/05/27 15:17:39 by nlorion          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
-
-# define BUFFER_SIZE 20
 
 # include <unistd.h>
 # include <fcntl.h>

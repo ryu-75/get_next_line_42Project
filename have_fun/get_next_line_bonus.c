@@ -6,7 +6,7 @@
 /*   By: nlorion <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/26 18:26:12 by nlorion           #+#    #+#             */
-/*   Updated: 2022/05/26 18:37:10 by nlorion          ###   ########.fr       */
+/*   Updated: 2022/05/27 16:03:05 by nlorion          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*get_next_line(int fd)
 	char	*line;
 	
 	line = NULL;
-	if (fd < 0 || BUFFER_SIZE <= 0 || fd == -1 || fd > 1024)	
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, buf, 0) == -1 || fd > 1024)	
 		return (NULL);
 	line = ft_read_line(fd, line, buf[1024]);
 	if (line[0] == '\0')
@@ -81,9 +81,9 @@ char	*ft_check_last_line(char *line, char *buf)
 			buf[j] = line[i];
 			i++;
 			j++;
-		}
-		buf[j] = '\0';
+		}	
 	}
+	buf[j] = '\0';
 	return (buf);
 }
 /*
