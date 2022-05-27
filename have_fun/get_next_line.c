@@ -6,7 +6,7 @@
 /*   By: nlorion <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/26 18:26:12 by nlorion           #+#    #+#             */
-/*   Updated: 2022/05/27 15:23:44 by nlorion          ###   ########.fr       */
+/*   Updated: 2022/05/27 17:41:00 by nlorion          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*get_next_line(int fd)
 	char	*line;
 	
 	line = NULL;
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, buf, 0) == -1)	
+	if (fd < 0 || read(fd, buf, 0) == -1)	
 		return (NULL);
 	line = ft_read_line(fd, line, buf);
 	if (line[0] == '\0')
@@ -37,7 +37,7 @@ char	*ft_read_line(int fd, char *line, char *buf)
 	line = ft_strjoin(line, buf);
 	while (readed != 0)
 	{
-		readed = read(fd, buf, BUFFER_SIZE);
+		readed = read(fd, buf, BUFFER_SIZE + 1);
 		buf[readed] = '\0';
 		line = ft_strjoin(line, buf);
 		if (ft_strchr(line, '\n'))
@@ -46,9 +46,9 @@ char	*ft_read_line(int fd, char *line, char *buf)
 			line = ft_check_line(line);
 			break ;
 		}
+		if (line == NULL)
+			return (NULL);
 	}
-	if (line == NULL)
-		return (NULL);
 	return (line);
 }
 
