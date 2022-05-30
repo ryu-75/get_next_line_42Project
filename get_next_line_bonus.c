@@ -6,7 +6,7 @@
 /*   By: nlorion <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/26 18:26:12 by nlorion           #+#    #+#             */
-/*   Updated: 2022/05/27 17:41:35 by nlorion          ###   ########.fr       */
+/*   Updated: 2022/05/30 15:07:40 by nlorion          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 char	*get_next_line(int fd)
 {
 	static char	buf[1024][BUFFER_SIZE + 1];
-	char	*line;
-	
+	char		*line;
+
 	line = NULL;
-	if (fd < 0 || read(fd, buf, 0) == -1 || fd > 1024)	
+	if (fd < 0 || read(fd, buf, 0) == -1 || fd > 1024 || BUFFER_SIZE <= 0)
 		return (NULL);
 	line = ft_read_line(fd, line, buf[fd]);
 	if (line[0] == '\0')
@@ -35,19 +35,18 @@ char	*ft_read_line(int fd, char *line, char *buf)
 
 	readed = 1;
 	line = ft_strjoin(line, buf);
-	while (readed != 0)
+	while (readed != 0 && !ft_strchr(line, '\n'))
 	{
-		readed = read(fd, buf, BUFFER_SIZE + 1);
+		readed = read(fd, buf, BUFFER_SIZE);
 		buf[readed] = '\0';
 		line = ft_strjoin(line, buf);
-		if (ft_strchr(line, '\n'))
-		{	
-			buf = ft_check_last_line(line, buf);
-			line = ft_check_line(line);
-			break ;
-		}
 		if (line == NULL)
-			return (NULL)
+			return (NULL);
+	}
+	if (ft_strchr(line, '\n'))
+	{	
+		buf = ft_check_last_line(line, buf);
+		line = ft_check_line(line);
 	}
 	return (line);
 }
@@ -55,7 +54,7 @@ char	*ft_read_line(int fd, char *line, char *buf)
 char	*ft_check_line(char *line)
 {
 	int	i;
-	
+
 	i = 0;
 	while (line[i] && line[i] != '\n')
 		i++;
@@ -74,15 +73,13 @@ char	*ft_check_last_line(char *line, char *buf)
 		i++;
 	j = 0;
 	if (line[i] == '\n')
-	{
 		i++;
-		while (line[i])
-		{
-			buf[j] = line[i];
-			i++;
-			j++;
-		}	
-	}
+	while (line[i])
+	{
+		buf[j] = line[i];
+		i++;
+		j++;
+	}	
 	buf[j] = '\0';
 	return (buf);
 }

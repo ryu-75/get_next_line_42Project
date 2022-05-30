@@ -5,13 +5,15 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nlorion <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/26 18:16:48 by nlorion           #+#    #+#             */
-/*   Updated: 2022/05/27 16:52:11 by nlorion          ###   ########.fr       */
+/*   Created: 2022/05/30 15:06:18 by nlorion           #+#    #+#             */
+/*   Updated: 2022/05/30 15:08:37 by nlorion          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
+
+# define BUFFER_SIZE
 
 # include <unistd.h>
 # include <fcntl.h>
@@ -28,8 +30,8 @@ char	*ft_read_line(int fd, char *line, char *buf);
 
 char	*ft_strjoin(char *s1, char *s2);
 
-int	ft_strchr(char *str, int c);
+char	*ft_strchr(char *str, int c);
 
-int	ft_strlen(char *str);
+int		ft_strlen(char *str);
 
 #endif

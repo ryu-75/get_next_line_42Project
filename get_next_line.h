@@ -1,24 +1,37 @@
-# ifndef GET_NEXT_LINE
-#define GET_NEXT_LINE
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nlorion <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/05/26 18:16:48 by nlorion           #+#    #+#             */
+/*   Updated: 2022/05/30 15:08:24 by nlorion          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
+
+# define BUFFER_SIZE
+
+# include <unistd.h>
+# include <fcntl.h>
 # include <stdio.h>
 # include <stdlib.h>
-# include <fcntl.h>
-# include <unistd.h>
 
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 20
-# endif
+char	*ft_check_line(char *line);
 
-typedef struct	s_list
-{
-	char		*content;
-	struct s_list	*next;
-}		t_list;
+char	*ft_check_last_line(char *line, char *buf);
 
 char	*get_next_line(int fd);
-void	read_and_stash(int fd, t_list **stash);
-t_list	*ft_getback_last(t_list *stash);
-int	check_newline(t_list **stash);
+
+char	*ft_read_line(int fd, char *line, char *buf);
+
+char	*ft_strjoin(char *s1, char *s2);
+
+char	*ft_strchr(char *str, int c);
+
+int		ft_strlen(char *str);
 
 #endif

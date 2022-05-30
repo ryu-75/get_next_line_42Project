@@ -5,118 +5,102 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nlorion <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/23 10:19:12 by nlorion           #+#    #+#             */
-/*   Updated: 2022/05/23 16:45:10 by nlorion          ###   ########.fr       */
+/*   Created: 2022/05/26 18:26:12 by nlorion           #+#    #+#             */
+/*   Updated: 2022/05/30 15:03:08 by nlorion          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-/* Tant que je ne rencontre pas de \n, je stock la ligne dans un pointeur temporaire qui est le content de t_list */
-/* Une fois tomber sur le \n, je stock la ligne dans le buffer et free mon pointeur temporaire */
-/* Je stock dans mon buffer toutes les lignes  */
-
 char	*get_next_line(int fd)
 {
-	static t_list	*line;
-	char		*stash;
-	int		readed;
+	static char	buf[BUFFER_SIZE + 1];
+	char		*line;
 
-	stash = NULL;
-	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (NULL);
 	line = NULL;
-	read_and_stash(fd, &stash);
-	if (!stash)
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, buf, 0) == -1)
 		return (NULL);
-	// 2. On extrait la ligne 
-	return (line->content);
+	line = ft_read_line(fd, line, buf);
+	if (line[0] == '\0')
+	{
+		free(line);
+		return (NULL);
+	}
+	return (line);
 }
 
-void	read_and_stash(int fd, t_list **stash)
+char	*ft_read_line(int fd, char *line, char *buf)
 {
-	char	*buf;
 	int	readed;
 
 	readed = 1;
-	new_line = malloc(sizeof(t_list));
-	if (!new_line)
-		return ;
-	while (!check_newline(*stash) && readed != 0)
+	line = ft_strjoin(line, buf);
+	while (readed != 0 && !ft_strchr(line, '\n'))
 	{
-		buf = malloc(sizeof(char) * BUFFER_SIZE + 1);
-		if (buf == NULL)
-			return ;
-		readed = (int)read(fd, buf, BUFFER_SIZE);
-		if ((*stash == NULL && readed == 0) || readed == -1)
-		{
-			free(buf);
-			return ;
-		}
+		readed = read(fd, buf, BUFFER_SIZE);
 		buf[readed] = '\0';
-		add_to_stash(stash, buf, readed);
-		free(buf);
+		line = ft_strjoin(line, buf);
+		if (line == NULL)
+			return (NULL);
 	}
+	if (ft_strchr(line, '\n'))
+	{	
+		buf = ft_check_last_line(line, buf);
+		line = ft_check_line(line);
+	}	
+	return (line);
 }
 
-void	add_to_stash(t_list **stash, char *buf, int readed)
-{
-	t_list	*new_line;
-	t_list	*last;
-	int		i;
-
-	i = 0;
-	new_line->next = NULL;
-	new_line->content = malloc(sizeof(char) * readed + 1);
-	if (new_line == NULL)
-		return ;
-	while (buf[i] && i < readed)
-	{
-		new_line->content[i] = buf[i];
-		i++;
-	}
-	new_line->content[i] = '\0';
-	if (*stash == NULL)
-	{
-		*stash = new_line;
-		return ;
-	}
-	ft_getback_last(*stash);
-	last->next = new_line;
-}
-
-t_list	*ft_getback_last(t_list *stash)
-{
-	t_list	*last;
-	
-	last = stash;
-	while (last && last->next)
-		last = stash->next;
-	return (last);
-}
-
-/* Je check les lignes de fichier, si le curseur rencontre un '\n', la fonction retourne 1 sinon 0 */
-
-int	check_newline(t_list **stash)
+char	*ft_check_line(char *line)
 {
 	int	i;
-	t_list	*current;
 
-	if (!stash)
-		return (0);
 	i = 0;
-	while (current->content[i])
-	{
-		if (current->content[i] == '\n')
-			return (1);
+	while (line[i] && line[i] != '\n')
 		i++;
+	i++;
+	line[i] = '\0';
+	return (line);
+}
+
+char	*ft_check_last_line(char *line, char *buf)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (line[i] && line[i] != '\n')
+		i++;
+	j = 0;
+	if (line[i] == '\n')
+		i++;
+	while (line[i])
+	{
+		buf[j] = line[i];
+		i++;
+		j++;
+	}
+	buf[j] = '\0';
+	return (buf);
+}
+/*
+int	main(int argc, char **argv)
+{
+	int	fd;
+	char	*readed;
+
+	if (argc == 0)
+		return (0);
+	if (fd < 0 || fd == -1)
+		return (0);
+	fd = open(argv[1], O_RDONLY);
+	while (1)
+	{
+		readed = get_next_line(fd);
+		printf("%s\n", readed);
+		if (!readed)
+			break ;
 	}
 	return (0);
 }
-
-void	add_line_to_stash()
-
-int	main()
-{
-	char	**tab = 
-}
+*/
